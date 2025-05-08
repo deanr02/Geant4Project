@@ -58,7 +58,7 @@ namespace B4d
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    DetectorConstruction() = default;
+    DetectorConstruction(G4double f, G4double t);
     ~DetectorConstruction() override = default;
 
   public:
@@ -77,7 +77,12 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     // magnetic field messenger
 
     G4bool fCheckOverlaps = true;  // option to activate checking of volumes overlaps
-};
+    G4double activeFraction = 0.5; //active medium fraction
+    G4double layerThickness = 10; //dual layer thickness
+    G4double calorSize = 50000; //length in mm
+    G4int nofLayers = 5000;
+
+  };
 
 }  // namespace B4d
 

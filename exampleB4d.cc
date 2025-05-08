@@ -57,9 +57,15 @@ void PrintUsage()
 
 int main(int argc, char** argv)
 {
+  // Additional arguments: 
+  // argv[argc-2]: Active medium fraction (f_act)
+  // --- Fraction of detector which is active medium (LAr). Range: (0,1)
+  // argv[argc-1]: Dual layer thickness (t_layer)
+  // --- Thickenss of active medium layer (LAr) and absorber layer (Pb) combined. Range: (0, 25m)
+
   // Evaluate arguments
   //
-  if (argc > 7) {
+  if (argc > 9) {
     PrintUsage();
     return 1;
   }
@@ -70,7 +76,7 @@ int main(int argc, char** argv)
 #ifdef G4MULTITHREADED
   G4int nThreads = 0;
 #endif
-  for (G4int i = 1; i < argc; i = i + 2) {
+  for (G4int i = 1; i < argc-2; i = i + 2) {
     if (G4String(argv[i]) == "-m")
       macro = argv[i + 1];
     else if (G4String(argv[i]) == "-u")
@@ -94,7 +100,7 @@ int main(int argc, char** argv)
   //
   G4UIExecutive* ui = nullptr;
   if (!macro.size()) {
-    ui = new G4UIExecutive(argc, argv, session);
+    ui = new G4UIExecutive(argc-2, argv, session);
   }
 
   // Optionally: choose a different Random engine...
@@ -117,14 +123,20 @@ int main(int argc, char** argv)
 
   // Set mandatory initialization classes
   //
-  auto detConstruction = new B4d::DetectorConstruction();
+  std::cout << "Arguments:" << std::endl;
+  std::cout << argv[argc-1] << std::endl;
+  std::cout << argv[argc-2] << std::endl;
+
+  auto detConstruction = new B4d::DetectorConstruction(std::stod(argv[argc-2]), std::stod(argv[argc-1]));
   runManager->SetUserInitialization(detConstruction);
 
   auto physicsList = new FTFP_BERT;
   runManager->SetUserInitialization(physicsList);
 
+  G4int nofLayers = std::floor(50000/std::stod(argv[argc-1]));
+
   auto actionInitialization = new B4d::ActionInitialization();
-  runManager->SetUserInitialization(actionInitialization);
+  runManager->SetUserInitialization(actionInitialization(nofLayers));
 
   // Initialize visualization
   auto visManager = new G4VisExecutive;

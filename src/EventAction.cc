@@ -71,17 +71,6 @@ G4double EventAction::GetSum(G4THitsMap<G4double>* hitsMap) const
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::PrintEventStatistics(G4double absoEdep, G4double absoTrackLength,
-                                       G4double gapEdep, G4double gapTrackLength) const
-{
-  // Print event statistics
-  //
-  G4cout << "   Absorber: total energy: " << std::setw(7) << G4BestUnit(absoEdep, "Energy")
-         << "       total track length: " << std::setw(7) << G4BestUnit(absoTrackLength, "Length")
-         << G4endl << "        Gap: total energy: " << std::setw(7) << G4BestUnit(gapEdep, "Energy")
-         << "       total track length: " << std::setw(7) << G4BestUnit(gapTrackLength, "Length")
-         << G4endl;
-}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -95,42 +84,62 @@ void EventAction::EndOfEventAction(const G4Event* event)
   if (fAbsoEdepHCID == -1) {
     fAbsoEdepHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/Edep");
     fGapEdepHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/Edep");
-    fAbsoTrackLengthHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/TrackLength");
-    fGapTrackLengthHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/TrackLength");
+    fAbsoNChargeTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/NChargeTracks");
+    fGapNChargeTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/NChargeTracks");
+    fAbsoNPhotonTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/NPhotonTracks");
+    fGapNPhotonTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/NPhotonTracks");
   }
 
   // Get sum values from hits collections
   //
-  auto absoEdep = GetSum(GetHitsCollection(fAbsoEdepHCID, event));
-  auto gapEdep = GetSum(GetHitsCollection(fGapEdepHCID, event));
+  auto absoEdep = GetHitsCollection(fAbsoEdepHCID, event);
+  auto gapEdep = GetHitsCollection(fGapEdepHCID, event);
 
-  auto absoTrackLength = GetSum(GetHitsCollection(fAbsoTrackLengthHCID, event));
-  auto gapTrackLength = GetSum(GetHitsCollection(fGapTrackLengthHCID, event));
+  auto absoNChargeTracks = GetHitsCollection(fAbsoNChargeTracksHCID, event);
+  auto gapNChargeTracks = GetHitsCollection(fGapNChargeTracksHCID, event);
+
+  auto absoNPhotonTracks = GetHitsCollection(fAbsoNPhotonTracksHCID, event);
+  auto gapNPhotonTracks = GetHitsCollection(fGapNPhotonTracksHCID, event);
 
   // get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
 
   // fill histograms
   //
-  analysisManager->FillH1(0, absoEdep);
-  analysisManager->FillH1(1, gapEdep);
-  analysisManager->FillH1(2, absoTrackLength);
-  analysisManager->FillH1(3, gapTrackLength);
+  for (const auto& it : absoEdep->GetMap()) {
+    analysisManager->FillH2(0, it.first, it.second);
+  }
+  for (const auto& it : gapEdep->GetMap()) {
+    analysisManager->FillH2(1, it.first, it.second);
+  }
+  for (const auto& it : absoNChargeTracks->GetMap()) {
+    analysisManager->FillH2(2, it.first, it.second);
+  }
+  for (const auto& it : gapNChargeTracks->GetMap()) {
+    analysisManager->FillH2(3,it.first, it.second);
+  }
+  for (const auto& it : absoNPhotonTracks->GetMap()) {
+    analysisManager->FillH2(4, it.first, it.second);
+  }
+  for (const auto& it : gapNPhotonTracks->GetMap()) {
+    analysisManager->FillH2(5, it.first, it.second);
+  }
 
   // fill ntuple
   //
-  analysisManager->FillNtupleDColumn(0, absoEdep);
-  analysisManager->FillNtupleDColumn(1, gapEdep);
-  analysisManager->FillNtupleDColumn(2, absoTrackLength);
-  analysisManager->FillNtupleDColumn(3, gapTrackLength);
-  analysisManager->AddNtupleRow();
+  // analysisManager->FillNtupleDColumn(0, absoEdep->GetMap());
+  // analysisManager->FillNtupleDColumn(1, gapEdep->GetMap());
+  // analysisManager->FillNtupleDColumn(2, absoNChargeTracks);
+  // analysisManager->FillNtupleDColumn(3, gapNChargeTracks);
+  // analysisManager->FillNtupleDColumn(4, absoNPhotonTracks);
+  // analysisManager->FillNtupleDColumn(5, gapNPhotonTracks);
+  // analysisManager->AddNtupleRow();
 
   // print per event (modulo n)
   //
   auto eventID = event->GetEventID();
   auto printModulo = G4RunManager::GetRunManager()->GetPrintProgress();
   if ((printModulo > 0) && (eventID % printModulo == 0)) {
-    PrintEventStatistics(absoEdep, absoTrackLength, gapEdep, gapTrackLength);
     G4cout << "--> End of event: " << eventID << "\n" << G4endl;
   }
 }

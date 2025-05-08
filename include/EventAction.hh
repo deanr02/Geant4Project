@@ -64,8 +64,10 @@ class EventAction : public G4UserEventAction
     // data members
     G4int fAbsoEdepHCID = -1;
     G4int fGapEdepHCID = -1;
-    G4int fAbsoTrackLengthHCID = -1;
-    G4int fGapTrackLengthHCID = -1;
+    G4int fAbsoNChargeTracksHCID = -1;
+    G4int fGapNChargeTracksHCID = -1;
+    G4int fAbsoNPhotonTracksHCID = -1;
+    G4int fGapNPhotonTracksHCID = -1;
 };
 
 }  // namespace B4d

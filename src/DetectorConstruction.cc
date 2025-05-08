@@ -57,6 +57,16 @@ G4ThreadLocal G4GlobalMagFieldMessenger* DetectorConstruction::fMagFieldMessenge
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+DetectorConstruction::DetectorConstruction(G4double f, G4double t)
+: G4VUserDetectorConstruction()
+{
+  activeFraction = f; //active medium fraction
+  nofLayers = std::floor(calorSize/t);
+  layerThickness = calorSize/nofLayers;
+  std::cout << "Doing construction" << std::endl;
+
+}
+
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   // Define materials
@@ -94,13 +104,22 @@ void DetectorConstruction::DefineMaterials()
 G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 {
   // Geometry parameters
-  G4int nofLayers = 10;
-  G4double absoThickness = 10. * mm;
-  G4double gapThickness = 5. * mm;
-  G4double calorSizeXY = 10. * cm;
 
-  auto layerThickness = absoThickness + gapThickness;
-  auto calorThickness = nofLayers * layerThickness;
+  G4double gapThickness = layerThickness * activeFraction * mm;
+  G4double absoThickness = layerThickness * (1- activeFraction) * mm;
+  G4double calorSizeXY = calorSize * mm;
+
+  std::cout << "calor Size" + std::to_string(calorSizeXY) << std::endl;
+  std::cout << "layer thickness" + std::to_string(layerThickness) << std::endl;
+  std::cout << "active medium fraction" + std::to_string(activeFraction) << std::endl;
+  std::cout << "gap thickness" + std::to_string(gapThickness) << std::endl;
+  std::cout << "absorber thickness" + std::to_string(absoThickness) << std::endl;
+  std::cout << "number of layers" + std::to_string(nofLayers) << std::endl;
+
+
+
+
+  auto calorThickness = calorSizeXY;
   auto worldSizeXY = 1.2 * calorSizeXY;
   auto worldSizeZ = 1.2 * calorThickness;
 
@@ -208,6 +227,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                     0,  // copy number
                     fCheckOverlaps);  // checking overlaps
 
+  
   //
   // print parameters
   //
@@ -247,9 +267,14 @@ void DetectorConstruction::ConstructSDandField()
   primitive = new G4PSEnergyDeposit("Edep");
   absDetector->RegisterPrimitive(primitive);
 
-  primitive = new G4PSTrackLength("TrackLength");
-  auto charged = new G4SDChargedFilter("chargedFilter");
+  primitive = new G4PSPopulation("NChargeTracks");
+  G4VSDFilter charged = new G4SDChargedFilter("chargedFilter");
   primitive->SetFilter(charged);
+  absDetector->RegisterPrimitive(primitive);
+
+  primitive = new G4PSPopulation("NPhotonTracks");
+  G4VSDFilter gammaFilter = new G4SDParticleFilter("gamma");
+  primitive->SetFilter(gammaFilter);
   absDetector->RegisterPrimitive(primitive);
 
   SetSensitiveDetector("AbsoLV", absDetector);
@@ -262,8 +287,12 @@ void DetectorConstruction::ConstructSDandField()
   primitive = new G4PSEnergyDeposit("Edep");
   gapDetector->RegisterPrimitive(primitive);
 
-  primitive = new G4PSTrackLength("TrackLength");
+  primitive = new G4PSPopulation("NChargeTracks");
   primitive->SetFilter(charged);
+  gapDetector->RegisterPrimitive(primitive);
+
+  primitive = new G4PSPopulation("NPhotonTracks");
+  primitive->SetFilter(gammaFilter);
   gapDetector->RegisterPrimitive(primitive);
 
   SetSensitiveDetector("GapLV", gapDetector);
