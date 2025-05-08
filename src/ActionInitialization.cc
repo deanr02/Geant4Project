@@ -24,42 +24,45 @@
 // ********************************************************************
 //
 //
-/// \file B4/B4d/src/ActionInitialization.cc
-/// \brief Implementation of the B4d::ActionInitialization class
+/// \file ActionInitialization.cc
+/// \brief Implementation of the ActionInitialization class
 
 #include "ActionInitialization.hh"
 
+#include "DetectorConstruction.hh"
 #include "EventAction.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
-
-using namespace B4;
-
-namespace B4d
-{
+#include "SteppingAction.hh"
+#include "TrackingAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-ActionInitialization::ActionInitialization(G4int n)
-: G4VUserActionInitialization()
-{
-  nofLayers = n;
-}
+ActionInitialization::ActionInitialization(DetectorConstruction* det) : fDetector(det) {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void ActionInitialization::BuildForMaster() const
 {
-  SetUserAction(new RunAction(nofLayers));
+  SetUserAction(new RunAction(fDetector));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void ActionInitialization::Build() const
 {
-  SetUserAction(new PrimaryGeneratorAction);
-  SetUserAction(new RunAction(nofLayers));
-  SetUserAction(new EventAction);
+  PrimaryGeneratorAction* prim = new PrimaryGeneratorAction(fDetector);
+  SetUserAction(prim);
+
+  RunAction* run = new RunAction(fDetector, prim);
+  SetUserAction(run);
+
+  EventAction* event = new EventAction(fDetector);
+  SetUserAction(event);
+
+  SetUserAction(new TrackingAction(fDetector, event));
+
+  SetUserAction(new SteppingAction(fDetector, event));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-}  // namespace B4d

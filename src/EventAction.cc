@@ -23,127 +23,77 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm3/src/EventAction.cc
+/// \brief Implementation of the EventAction class
 //
-/// \file B4/B4d/src/EventAction.cc
-/// \brief Implementation of the B4d::EventAction class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "EventAction.hh"
 
-#include "G4AnalysisManager.hh"
+#include "HistoManager.hh"
+#include "Run.hh"
+
 #include "G4Event.hh"
-#include "G4HCofThisEvent.hh"
 #include "G4RunManager.hh"
-#include "G4SDManager.hh"
-#include "G4THitsMap.hh"
-#include "G4UnitsTable.hh"
-
-#include <iomanip>
-
-namespace B4d
-{
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4THitsMap<G4double>* EventAction::GetHitsCollection(G4int hcID, const G4Event* event) const
+EventAction::EventAction(DetectorConstruction* det) : fDetector(det) {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void EventAction::BeginOfEventAction(const G4Event*)
 {
-  auto hitsCollection = static_cast<G4THitsMap<G4double>*>(event->GetHCofThisEvent()->GetHC(hcID));
-
-  if (!hitsCollection) {
-    G4ExceptionDescription msg;
-    msg << "Cannot access hitsCollection ID " << hcID;
-    G4Exception("EventAction::GetHitsCollection()", "MyCode0003", FatalException, msg);
+  // initialize EnergyDeposit per event
+  //
+  for (G4int k = 0; k < kMaxAbsor; k++) {
+    fEnergyDeposit[k] = fTrackLengthCh[k] = 0.0;
   }
-
-  return hitsCollection;
+  // initialize EnergyLeakage per event
+  //
+  fEnergyLeak = 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double EventAction::GetSum(G4THitsMap<G4double>* hitsMap) const
+void EventAction::SumEnergy(G4int k, G4double de, G4double dl)
 {
-  G4double sumValue = 0.;
-  for (auto it : *hitsMap->GetMap()) {
-    // hitsMap->GetMap() returns the map of std::map<G4int, G4double*>
-    sumValue += *(it.second);
-  }
-  return sumValue;
+  fEnergyDeposit[k] += de;
+  fTrackLengthCh[k] += dl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void EventAction::BeginOfEventAction(const G4Event* /*event*/) {}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void EventAction::EndOfEventAction(const G4Event* event)
+void EventAction::SumEnergyLeak(G4double eleak)
 {
-  // Get hist collections IDs
-  if (fAbsoEdepHCID == -1) {
-    fAbsoEdepHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/Edep");
-    fGapEdepHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/Edep");
-    fAbsoNChargeTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/NChargeTracks");
-    fGapNChargeTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/NChargeTracks");
-    fAbsoNPhotonTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/NPhotonTracks");
-    fGapNPhotonTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/NPhotonTracks");
-  }
-
-  // Get sum values from hits collections
-  //
-  auto absoEdep = GetHitsCollection(fAbsoEdepHCID, event);
-  auto gapEdep = GetHitsCollection(fGapEdepHCID, event);
-
-  auto absoNChargeTracks = GetHitsCollection(fAbsoNChargeTracksHCID, event);
-  auto gapNChargeTracks = GetHitsCollection(fGapNChargeTracksHCID, event);
-
-  auto absoNPhotonTracks = GetHitsCollection(fAbsoNPhotonTracksHCID, event);
-  auto gapNPhotonTracks = GetHitsCollection(fGapNPhotonTracksHCID, event);
-
-  // get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
-
-  // fill histograms
-  //
-  for (const auto& it : absoEdep->GetMap()) {
-    analysisManager->FillH2(0, it.first, it.second);
-  }
-  for (const auto& it : gapEdep->GetMap()) {
-    analysisManager->FillH2(1, it.first, it.second);
-  }
-  for (const auto& it : absoNChargeTracks->GetMap()) {
-    analysisManager->FillH2(2, it.first, it.second);
-  }
-  for (const auto& it : gapNChargeTracks->GetMap()) {
-    analysisManager->FillH2(3,it.first, it.second);
-  }
-  for (const auto& it : absoNPhotonTracks->GetMap()) {
-    analysisManager->FillH2(4, it.first, it.second);
-  }
-  for (const auto& it : gapNPhotonTracks->GetMap()) {
-    analysisManager->FillH2(5, it.first, it.second);
-  }
-
-  // fill ntuple
-  //
-  // analysisManager->FillNtupleDColumn(0, absoEdep->GetMap());
-  // analysisManager->FillNtupleDColumn(1, gapEdep->GetMap());
-  // analysisManager->FillNtupleDColumn(2, absoNChargeTracks);
-  // analysisManager->FillNtupleDColumn(3, gapNChargeTracks);
-  // analysisManager->FillNtupleDColumn(4, absoNPhotonTracks);
-  // analysisManager->FillNtupleDColumn(5, gapNPhotonTracks);
-  // analysisManager->AddNtupleRow();
-
-  // print per event (modulo n)
-  //
-  auto eventID = event->GetEventID();
-  auto printModulo = G4RunManager::GetRunManager()->GetPrintProgress();
-  if ((printModulo > 0) && (eventID % printModulo == 0)) {
-    G4cout << "--> End of event: " << eventID << "\n" << G4endl;
-  }
+  fEnergyLeak += eleak;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-}  // namespace B4d
+void EventAction::EndOfEventAction(const G4Event*)
+{
+  // get Run
+  Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
+
+  G4double EdepTot = 0.;
+  for (G4int k = 1; k <= fDetector->GetNbOfAbsor(); k++) {
+    run->FillPerEvent(k, fEnergyDeposit[k], fTrackLengthCh[k]);
+    if (fEnergyDeposit[k] > 0.) G4AnalysisManager::Instance()->FillH1(k, fEnergyDeposit[k]);
+    EdepTot += fEnergyDeposit[k];
+  }
+
+  run->SumEnergies(EdepTot, fEnergyLeak);
+
+  // histograms
+  G4AnalysisManager* analysis = G4AnalysisManager::Instance();
+  analysis->FillH1(kMaxAbsor, EdepTot);
+  G4int id = 2 * kMaxAbsor + 3;
+  analysis->FillH1(id, fEnergyLeak);
+  G4double ETot = EdepTot + fEnergyLeak;
+  analysis->FillH1(++id, ETot);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

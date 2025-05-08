@@ -23,54 +23,42 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm3/include/EventAction.hh
+/// \brief Definition of the EventAction class
 //
-/// \file B4/B4d/include/EventAction.hh
-/// \brief Definition of the B4d::EventAction class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #ifndef EventAction_h
 #define EventAction_h 1
 
+#include "DetectorConstruction.hh"
+
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 
-class G4Event;
-template <typename T> class G4THitsMap;
-
-namespace B4d
-{
-
-/// Event action class
-///
-/// In EndOfEventAction(), it prints the accumulated quantities of the energy
-/// deposit and track lengths of charged particles in Absober and Gap layers
-/// stored in the hits collections.
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class EventAction : public G4UserEventAction
 {
   public:
-    EventAction() = default;
+    EventAction(DetectorConstruction*);
     ~EventAction() override = default;
 
-    void BeginOfEventAction(const G4Event* event) override;
-    void EndOfEventAction(const G4Event* event) override;
+    void BeginOfEventAction(const G4Event*) override;
+    void EndOfEventAction(const G4Event*) override;
+
+    void SumEnergy(G4int k, G4double de, G4double dl);
+    void SumEnergyLeak(G4double eleak);
 
   private:
-    // methods
-    G4THitsMap<G4double>* GetHitsCollection(G4int hcID, const G4Event* event) const;
-    G4double GetSum(G4THitsMap<G4double>* hitsMap) const;
-    void PrintEventStatistics(G4double absoEdep, G4double absoTrackLength, G4double gapEdep,
-                              G4double gapTrackLength) const;
+    DetectorConstruction* fDetector = nullptr;
 
-    // data members
-    G4int fAbsoEdepHCID = -1;
-    G4int fGapEdepHCID = -1;
-    G4int fAbsoNChargeTracksHCID = -1;
-    G4int fGapNChargeTracksHCID = -1;
-    G4int fAbsoNPhotonTracksHCID = -1;
-    G4int fGapNPhotonTracksHCID = -1;
+    G4double fEnergyDeposit[kMaxAbsor];
+    G4double fTrackLengthCh[kMaxAbsor];
+    G4double fEnergyLeak;
 };
-
-}  // namespace B4d
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

@@ -23,36 +23,36 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm3/src/PrimaryGeneratorAction.cc
+/// \brief Implementation of the PrimaryGeneratorAction class
 //
-/// \file B4/B4d/src/PrimaryGeneratorAction.cc
-/// \brief Implementation of the B4::PrimaryGeneratorAction class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "PrimaryGeneratorAction.hh"
 
-#include "G4Box.hh"
-#include "G4LogicalVolume.hh"
-#include "G4LogicalVolumeStore.hh"
+#include "DetectorConstruction.hh"
+#include "HistoManager.hh"
+#include "PrimaryGeneratorMessenger.hh"
+
+#include "G4Event.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
 #include "G4SystemOfUnits.hh"
-#include "globals.hh"
-
-namespace B4
-{
+#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-PrimaryGeneratorAction::PrimaryGeneratorAction()
+PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) : fDetector(det)
 {
-  G4int nofParticles = 1;
-  fParticleGun = new G4ParticleGun(nofParticles);
+  G4int n_particle = 1;
+  fParticleGun = new G4ParticleGun(n_particle);
+  SetDefaultKinematic();
 
-  // default particle kinematic
-  //
-  auto particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("e-");
-  fParticleGun->SetParticleDefinition(particleDefinition);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));
-  fParticleGun->SetParticleEnergy(300. * MeV);
+  // create a messenger for this class
+  fGunMessenger = new PrimaryGeneratorMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -60,44 +60,42 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
   delete fParticleGun;
+  delete fGunMessenger;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
+void PrimaryGeneratorAction::SetDefaultKinematic()
 {
-  // This function is called at the begining of event
-
-  // In order to avoid dependence of PrimaryGeneratorAction
-  // on DetectorConstruction class we get world volume
-  // from G4LogicalVolumeStore
-  //
-  G4double worldZHalfLength = 0.;
-  auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
-
-  // Check that the world volume has box shape
-  G4Box* worldBox = nullptr;
-  if (worldLV) {
-    worldBox = dynamic_cast<G4Box*>(worldLV->GetSolid());
-  }
-
-  if (worldBox) {
-    worldZHalfLength = worldBox->GetZHalfLength();
-  }
-  else {
-    G4ExceptionDescription msg;
-    msg << "World volume of box shape not found." << G4endl;
-    msg << "Perhaps you have changed geometry." << G4endl;
-    msg << "The gun will be place in the center.";
-    G4Exception("PrimaryGeneratorAction::GeneratePrimaries()", "MyCode0002", JustWarning, msg);
-  }
-
-  // Set gun position
-  fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -worldZHalfLength));
-
-  fParticleGun->GeneratePrimaryVertex(event);
+  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  G4String particleName;
+  G4ParticleDefinition* particle = particleTable->FindParticle(particleName = "e-");
+  fParticleGun->SetParticleDefinition(particle);
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1., 0., 0.));
+  fParticleGun->SetParticleEnergy(1. * GeV);
+  G4double position = -0.5 * (fDetector->GetWorldSizeX());
+  fParticleGun->SetParticlePosition(G4ThreeVector(position, 0. * cm, 0. * cm));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-}  // namespace B4
+void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
+{
+  // this function is called at the begining of event
+  //
+  // randomize the beam, if requested.
+  if (fRndmBeam > 0.) {
+    G4ThreeVector oldPosition = fParticleGun->GetParticlePosition();
+    G4double rbeam = 0.5 * (fDetector->GetCalorSizeYZ()) * fRndmBeam;
+    G4double x0 = oldPosition.x();
+    G4double y0 = oldPosition.y() + (2 * G4UniformRand() - 1.) * rbeam;
+    G4double z0 = oldPosition.z() + (2 * G4UniformRand() - 1.) * rbeam;
+    fParticleGun->SetParticlePosition(G4ThreeVector(x0, y0, z0));
+    fParticleGun->GeneratePrimaryVertex(anEvent);
+    fParticleGun->SetParticlePosition(oldPosition);
+  }
+  else
+    fParticleGun->GeneratePrimaryVertex(anEvent);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

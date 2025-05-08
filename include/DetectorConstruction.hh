@@ -23,68 +23,106 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm3/include/DetectorConstruction.hh
+/// \brief Definition of the DetectorConstruction class
 //
-/// \file B4/B4d/include/DetectorConstruction.hh
-/// \brief Definition of the B4d::DetectorConstruction class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef B4dDetectorConstruction_h
-#define B4dDetectorConstruction_h 1
+#ifndef DetectorConstruction_h
+#define DetectorConstruction_h 1
 
+#include "G4Cache.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 
+class G4Box;
+class G4LogicalVolume;
 class G4VPhysicalVolume;
+class G4Material;
+class DetectorMessenger;
+
 class G4GlobalMagFieldMessenger;
 
-namespace B4d
-{
+const G4int kMaxAbsor = 10;  // 0 + 9
 
-/// Detector construction class to define materials and geometry.
-/// The calorimeter is a box made of a given number of layers. A layer consists
-/// of an absorber plate and of a detection gap. The layer is replicated.
-///
-/// Four parameters define the geometry of the calorimeter :
-///
-/// - the thickness of an absorber plate,
-/// - the thickness of a gap,
-/// - the number of layers,
-/// - the transverse size of the calorimeter (the input face is a square).
-///
-/// In ConstructSDandField() sensitive detectors of G4MultiFunctionalDetector
-/// type with primitive scorers are created and associated with the Absorber
-/// and Gap volumes.  In addition a transverse uniform magnetic field is defined
-/// via G4GlobalMagFieldMessenger class.
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    DetectorConstruction(G4double f, G4double t);
-    ~DetectorConstruction() override = default;
+    DetectorConstruction();
+    ~DetectorConstruction() override;
 
   public:
+    void SetNbOfAbsor(G4int);
+    void SetAbsorMaterial(G4int, const G4String&);
+    void SetAbsorThickness(G4int, G4double);
+
+    void SetWorldMaterial(const G4String&);
+    void SetCalorSizeYZ(G4double);
+    void SetNbOfLayers(G4int);
+
     G4VPhysicalVolume* Construct() override;
     void ConstructSDandField() override;
 
+  public:
+    void PrintCalorParameters();
+
+    G4double GetWorldSizeX() const { return fWorldSizeX; };
+    G4double GetWorldSizeYZ() const { return fWorldSizeYZ; };
+
+    G4double GetCalorThickness() const { return fCalorThickness; };
+    G4double GetCalorSizeYZ() const { return fCalorSizeYZ; };
+
+    G4int GetNbOfLayers() const { return fNbOfLayers; };
+
+    G4int GetNbOfAbsor() const { return fNbOfAbsor; };
+    G4double GetAbsorThickness(G4int i) const { return fAbsorThickness[i]; };
+    const G4Material* GetAbsorMaterial(G4int i) const { return fAbsorMaterial[i]; };
+
+    const G4VPhysicalVolume* GetphysiWorld() const { return fPhysiWorld; };
+    const G4Material* GetWorldMaterial() const { return fWorldMaterial; };
+    const G4VPhysicalVolume* GetAbsorber(G4int i) const { return fPhysiAbsor[i]; };
+
   private:
-    // methods
-    //
     void DefineMaterials();
-    G4VPhysicalVolume* DefineVolumes();
+    void ComputeCalorParameters();
 
-    // data members
-    //
-    static G4ThreadLocal G4GlobalMagFieldMessenger* fMagFieldMessenger;
-    // magnetic field messenger
+    G4int fNbOfAbsor = 0;
+    G4Material* fAbsorMaterial[kMaxAbsor];
+    G4double fAbsorThickness[kMaxAbsor];
 
-    G4bool fCheckOverlaps = true;  // option to activate checking of volumes overlaps
-    G4double activeFraction = 0.5; //active medium fraction
-    G4double layerThickness = 10; //dual layer thickness
-    G4double calorSize = 50000; //length in mm
-    G4int nofLayers = 5000;
+    G4int fNbOfLayers = 0;
+    G4double fLayerThickness = 0.;
 
-  };
+    G4double fCalorSizeYZ = 0.;
+    G4double fCalorThickness = 0.;
 
-}  // namespace B4d
+    G4Material* fWorldMaterial = nullptr;
+    G4double fWorldSizeYZ = 0.;
+    G4double fWorldSizeX = 0.;
+
+    G4Box* fSolidWorld = nullptr;
+    G4LogicalVolume* fLogicWorld = nullptr;
+    G4VPhysicalVolume* fPhysiWorld = nullptr;
+
+    G4Box* fSolidCalor = nullptr;
+    G4LogicalVolume* fLogicCalor = nullptr;
+    G4VPhysicalVolume* fPhysiCalor = nullptr;
+
+    G4Box* fSolidLayer = nullptr;
+    G4LogicalVolume* fLogicLayer = nullptr;
+    G4VPhysicalVolume* fPhysiLayer = nullptr;
+
+    G4Box* fSolidAbsor[kMaxAbsor];
+    G4LogicalVolume* fLogicAbsor[kMaxAbsor];
+    G4VPhysicalVolume* fPhysiAbsor[kMaxAbsor];
+
+    DetectorMessenger* fDetectorMessenger = nullptr;
+    G4Cache<G4GlobalMagFieldMessenger*> fFieldMessenger = nullptr;
+};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

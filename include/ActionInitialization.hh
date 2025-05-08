@@ -24,32 +24,30 @@
 // ********************************************************************
 //
 //
-/// \file B4/B4d/include/ActionInitialization.hh
-/// \brief Definition of the B4d::ActionInitialization class
+/// \file ActionInitialization.hh
+/// \brief Definition of the ActionInitialization class
 
-#ifndef B4dActionInitialization_h
-#define B4dActionInitialization_h 1
+#ifndef ActionInitialization_h
+#define ActionInitialization_h 1
 
 #include "G4VUserActionInitialization.hh"
 
-namespace B4d
-{
+class DetectorConstruction;
 
 /// Action initialization class.
+///
 
 class ActionInitialization : public G4VUserActionInitialization
 {
   public:
-    ActionInitialization(G4int nofLayers);
+    ActionInitialization(DetectorConstruction*);
     ~ActionInitialization() override = default;
 
     void BuildForMaster() const override;
     void Build() const override;
 
   private:
-    G4int nofLayers = 5000;
+    DetectorConstruction* fDetector = nullptr;
 };
-
-}  // namespace B4d
 
 #endif

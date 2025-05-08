@@ -23,49 +23,52 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm3/include/RunAction.hh
+/// \brief Definition of the RunAction class
 //
-/// \file B4/B4d/include/RunAction.hh
-/// \brief Definition of the B4::RunAction class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef B4RunAction_h
-#define B4RunAction_h 1
+#ifndef RunAction_h
+#define RunAction_h 1
 
 #include "G4UserRunAction.hh"
+#include "globals.hh"
 
-class G4Run;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-namespace B4
-{
+class Run;
+class DetectorConstruction;
+class PrimaryGeneratorAction;
+class RunActionMessenger;
+class HistoManager;
+class G4Timer;
 
-/// Run action class
-///
-/// It accumulates statistic and computes dispersion of the energy deposit
-/// and track lengths of charged particles with use of analysis tools:
-/// H1D histograms are created in BeginOfRunAction() for the following
-/// physics quantities:
-/// - Edep in absorber
-/// - Edep in gap
-/// - Track length in absorber
-/// - Track length in gap
-/// The same values are also saved in the ntuple.
-/// The histograms and ntuple are saved in the output file in a format
-/// according to a specified file extension.
-///
-/// In EndOfRunAction(), the accumulated statistic and computed
-/// dispersion is printed.
-///
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(G4int nofLayers);
-    ~RunAction() override = default;
+    RunAction(DetectorConstruction*, PrimaryGeneratorAction* prim = 0);
+    ~RunAction() override;
 
+    G4Run* GenerateRun() override;
     void BeginOfRunAction(const G4Run*) override;
     void EndOfRunAction(const G4Run*) override;
-};
 
-}  // namespace B4
+    // Acceptance parameters
+    void SetEdepAndRMS(G4int, G4double, G4double, G4double);
+    void SetApplyLimit(G4bool val);
+
+  private:
+    DetectorConstruction* fDetector = nullptr;
+    PrimaryGeneratorAction* fPrimary = nullptr;
+    Run* fRun = nullptr;
+    RunActionMessenger* fRunMessenger = nullptr;
+    HistoManager* fHistoManager = nullptr;
+    G4Timer* fTimer = nullptr;
+};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
