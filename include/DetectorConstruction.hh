@@ -60,7 +60,7 @@ namespace B4c
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    DetectorConstruction() = default;
+    DetectorConstruction(G4int nlayers, G4int absthick, G4int gapthick, G4int calsize);
     ~DetectorConstruction() override = default;
 
   public:
@@ -79,7 +79,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     // magnetic field messenger
 
     G4bool fCheckOverlaps = true;  // option to activate checking of volumes overlaps
-    G4int fNofLayers = -1;  // number of layers
+    G4int fNofLayers = 5;  // number of layers
+    G4int absthick = 10.;
+    G4int gapthick = 5.;
+    G4int calsize = 10.;
+
 };
 
 }  // namespace B4c

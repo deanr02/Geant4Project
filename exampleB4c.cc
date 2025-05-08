@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 #ifdef G4MULTITHREADED
   G4int nThreads = 0;
 #endif
-  for (G4int i = 1; i < argc; i = i + 2) {
+  for (G4int i = 1; i < argc-4; i = i + 2) {
     if (G4String(argv[i]) == "-m")
       macro = argv[i + 1];
     else if (G4String(argv[i]) == "-u")
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
   //
   G4UIExecutive* ui = nullptr;
   if (!macro.size()) {
-    ui = new G4UIExecutive(argc, argv, session);
+    ui = new G4UIExecutive(argc-4, argv, session);
   }
 
   // Optionally: choose a different Random engine...
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 
   // Set mandatory initialization classes
   //
-  auto detConstruction = new B4c::DetectorConstruction();
+  auto detConstruction = new B4c::DetectorConstruction(std::atoi(argv[argc-4]), std::atoi(argv[argc-3]), std::atoi(argv[argc-2]), std::atoi(argv[argc-1]));
   runManager->SetUserInitialization(detConstruction);
 
   auto physicsList = new FTFP_BERT;

@@ -54,6 +54,15 @@ G4ThreadLocal G4GlobalMagFieldMessenger* DetectorConstruction::fMagFieldMessenge
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+DetectorConstruction::DetectorConstruction(G4int nlayers, G4int athick, G4int gthick, G4int size)
+: G4VUserDetectorConstruction()
+{
+  fNofLayers = nlayers;
+  absthick = athick;
+  gapthick = gthick;
+  calsize = size;
+}
+
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   // Define materials
@@ -91,10 +100,9 @@ void DetectorConstruction::DefineMaterials()
 G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 {
   // Geometry parameters
-  fNofLayers = 10;
-  G4double absoThickness = 10. * mm;
-  G4double gapThickness = 5. * mm;
-  G4double calorSizeXY = 10. * cm;
+  G4double absoThickness = absthick * mm;
+  G4double gapThickness = gapthick * mm;
+  G4double calorSizeXY = calsize * cm;
 
   auto layerThickness = absoThickness + gapThickness;
   auto calorThickness = fNofLayers * layerThickness;
