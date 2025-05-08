@@ -24,21 +24,19 @@
 // ********************************************************************
 //
 //
-/// \file B4/B4c/include/EventAction.hh
-/// \brief Definition of the B4c::EventAction class
+/// \file B4/B4d/include/EventAction.hh
+/// \brief Definition of the B4d::EventAction class
 
-#ifndef B4cEventAction_h
-#define B4cEventAction_h 1
+#ifndef EventAction_h
+#define EventAction_h 1
 
 #include "G4UserEventAction.hh"
-
-#include "CalorHit.hh"
-
 #include "globals.hh"
 
 class G4Event;
+template <typename T> class G4THitsMap;
 
-namespace B4c
+namespace B4d
 {
 
 /// Event action class
@@ -58,16 +56,19 @@ class EventAction : public G4UserEventAction
 
   private:
     // methods
-    CalorHitsCollection* GetHitsCollection(G4int hcID, const G4Event* event) const;
+    G4THitsMap<G4double>* GetHitsCollection(G4int hcID, const G4Event* event) const;
+    G4double GetSum(G4THitsMap<G4double>* hitsMap) const;
     void PrintEventStatistics(G4double absoEdep, G4double absoTrackLength, G4double gapEdep,
                               G4double gapTrackLength) const;
 
     // data members
-    G4int fAbsHCID = -1;
-    G4int fGapHCID = -1;
+    G4int fAbsoEdepHCID = -1;
+    G4int fGapEdepHCID = -1;
+    G4int fAbsoTrackLengthHCID = -1;
+    G4int fGapTrackLengthHCID = -1;
 };
 
-}  // namespace B4c
+}  // namespace B4d
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

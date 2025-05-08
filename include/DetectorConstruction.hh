@@ -24,21 +24,19 @@
 // ********************************************************************
 //
 //
-/// \file B4/B4c/include/DetectorConstruction.hh
-/// \brief Definition of the B4c::DetectorConstruction class
+/// \file B4/B4d/include/DetectorConstruction.hh
+/// \brief Definition of the B4d::DetectorConstruction class
 
-#ifndef B4cDetectorConstruction_h
-#define B4cDetectorConstruction_h 1
+#ifndef B4dDetectorConstruction_h
+#define B4dDetectorConstruction_h 1
 
 #include "G4VUserDetectorConstruction.hh"
-
-#include "G4Threading.hh"
 #include "globals.hh"
 
 class G4VPhysicalVolume;
 class G4GlobalMagFieldMessenger;
 
-namespace B4c
+namespace B4d
 {
 
 /// Detector construction class to define materials and geometry.
@@ -52,15 +50,15 @@ namespace B4c
 /// - the number of layers,
 /// - the transverse size of the calorimeter (the input face is a square).
 ///
-/// In ConstructSDandField() sensitive detectors of CalorimeterSD type
-/// are created and associated with the Absorber and Gap volumes.
-/// In addition a transverse uniform magnetic field is defined
+/// In ConstructSDandField() sensitive detectors of G4MultiFunctionalDetector
+/// type with primitive scorers are created and associated with the Absorber
+/// and Gap volumes.  In addition a transverse uniform magnetic field is defined
 /// via G4GlobalMagFieldMessenger class.
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    DetectorConstruction(G4int nlayers, G4int absthick, G4int gapthick, G4int calsize);
+    DetectorConstruction() = default;
     ~DetectorConstruction() override = default;
 
   public:
@@ -79,14 +77,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     // magnetic field messenger
 
     G4bool fCheckOverlaps = true;  // option to activate checking of volumes overlaps
-    G4int fNofLayers = 5;  // number of layers
-    G4int absthick = 10.;
-    G4int gapthick = 5.;
-    G4int calsize = 10.;
-
 };
 
-}  // namespace B4c
+}  // namespace B4d
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

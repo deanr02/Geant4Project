@@ -24,12 +24,10 @@
 // ********************************************************************
 //
 //
-/// \file B4/B4c/src/DetectorConstruction.cc
-/// \brief Implementation of the B4c::DetectorConstruction class
+/// \file B4/B4d/src/DetectorConstruction.cc
+/// \brief Implementation of the B4d::DetectorConstruction class
 
 #include "DetectorConstruction.hh"
-
-#include "CalorimeterSD.hh"
 
 #include "G4AutoDelete.hh"
 #include "G4Box.hh"
@@ -37,15 +35,20 @@
 #include "G4GlobalMagFieldMessenger.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
+#include "G4MultiFunctionalDetector.hh"
 #include "G4NistManager.hh"
+#include "G4PSEnergyDeposit.hh"
+#include "G4PSTrackLength.hh"
 #include "G4PVPlacement.hh"
 #include "G4PVReplica.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4SDChargedFilter.hh"
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4VPrimitiveScorer.hh"
 #include "G4VisAttributes.hh"
 
-namespace B4c
+namespace B4d
 {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -53,15 +56,6 @@ namespace B4c
 G4ThreadLocal G4GlobalMagFieldMessenger* DetectorConstruction::fMagFieldMessenger = nullptr;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-DetectorConstruction::DetectorConstruction(G4int nlayers, G4int athick, G4int gthick, G4int size)
-: G4VUserDetectorConstruction()
-{
-  fNofLayers = nlayers;
-  absthick = athick;
-  gapthick = gthick;
-  calsize = size;
-}
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
@@ -100,12 +94,13 @@ void DetectorConstruction::DefineMaterials()
 G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 {
   // Geometry parameters
-  G4double absoThickness = absthick * mm;
-  G4double gapThickness = gapthick * mm;
-  G4double calorSizeXY = calsize * cm;
+  G4int nofLayers = 10;
+  G4double absoThickness = 10. * mm;
+  G4double gapThickness = 5. * mm;
+  G4double calorSizeXY = 10. * cm;
 
   auto layerThickness = absoThickness + gapThickness;
-  auto calorThickness = fNofLayers * layerThickness;
+  auto calorThickness = nofLayers * layerThickness;
   auto worldSizeXY = 1.2 * calorSizeXY;
   auto worldSizeZ = 1.2 * calorThickness;
 
@@ -172,7 +167,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                   layerLV,  // its logical volume
                   calorLV,  // its mother
                   kZAxis,  // axis of replication
-                  fNofLayers,  // number of replica
+                  nofLayers,  // number of replica
                   layerThickness);  // witdth of replica
 
   //
@@ -186,7 +181,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                                         "AbsoLV");  // its name
 
   new G4PVPlacement(nullptr,  // no rotation
-                    G4ThreeVector(0., 0., -gapThickness / 2),  // its position
+                    G4ThreeVector(0., 0., -gapThickness / 2),  //  its position
                     absorberLV,  // its logical volume
                     "Abso",  // its name
                     layerLV,  // its mother  volume
@@ -205,7 +200,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                                    "GapLV");  // its name
 
   new G4PVPlacement(nullptr,  // no rotation
-                    G4ThreeVector(0., 0., absoThickness / 2),  // its position
+                    G4ThreeVector(0., 0., absoThickness / 2),  //  its position
                     gapLV,  // its logical volume
                     "Gap",  // its name
                     layerLV,  // its mother  volume
@@ -217,7 +212,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   // print parameters
   //
   G4cout << G4endl << "------------------------------------------------------------" << G4endl
-         << "---> The calorimeter is " << fNofLayers << " layers of: [ " << absoThickness / mm
+         << "---> The calorimeter is " << nofLayers << " layers of: [ " << absoThickness / mm
          << "mm of " << absorberMaterial->GetName() << " + " << gapThickness / mm << "mm of "
          << gapMaterial->GetName() << " ] " << G4endl
          << "------------------------------------------------------------" << G4endl;
@@ -238,18 +233,40 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
 void DetectorConstruction::ConstructSDandField()
 {
-  // G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
-
+  G4SDManager::GetSDMpointer()->SetVerboseLevel(1);
   //
-  // Sensitive detectors
+  // Scorers
   //
-  auto absoSD = new CalorimeterSD("AbsorberSD", "AbsorberHitsCollection", fNofLayers);
-  G4SDManager::GetSDMpointer()->AddNewDetector(absoSD);
-  SetSensitiveDetector("AbsoLV", absoSD);
 
-  auto gapSD = new CalorimeterSD("GapSD", "GapHitsCollection", fNofLayers);
-  G4SDManager::GetSDMpointer()->AddNewDetector(gapSD);
-  SetSensitiveDetector("GapLV", gapSD);
+  // declare Absorber as a MultiFunctionalDetector scorer
+  //
+  auto absDetector = new G4MultiFunctionalDetector("Absorber");
+  G4SDManager::GetSDMpointer()->AddNewDetector(absDetector);
+
+  G4VPrimitiveScorer* primitive;
+  primitive = new G4PSEnergyDeposit("Edep");
+  absDetector->RegisterPrimitive(primitive);
+
+  primitive = new G4PSTrackLength("TrackLength");
+  auto charged = new G4SDChargedFilter("chargedFilter");
+  primitive->SetFilter(charged);
+  absDetector->RegisterPrimitive(primitive);
+
+  SetSensitiveDetector("AbsoLV", absDetector);
+
+  // declare Gap as a MultiFunctionalDetector scorer
+  //
+  auto gapDetector = new G4MultiFunctionalDetector("Gap");
+  G4SDManager::GetSDMpointer()->AddNewDetector(gapDetector);
+
+  primitive = new G4PSEnergyDeposit("Edep");
+  gapDetector->RegisterPrimitive(primitive);
+
+  primitive = new G4PSTrackLength("TrackLength");
+  primitive->SetFilter(charged);
+  gapDetector->RegisterPrimitive(primitive);
+
+  SetSensitiveDetector("GapLV", gapDetector);
 
   //
   // Magnetic field
@@ -267,4 +284,4 @@ void DetectorConstruction::ConstructSDandField()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-}  // namespace B4c
+}  // namespace B4d

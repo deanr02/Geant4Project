@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-/// \file B4/B4c/src/RunAction.cc
+/// \file B4/B4d/src/RunAction.cc
 /// \brief Implementation of the B4::RunAction class
 
 #include "RunAction.hh"

@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-/// \file B4/B4c/include/RunAction.hh
+/// \file B4/B4d/include/RunAction.hh
 /// \brief Definition of the B4::RunAction class
 
 #ifndef B4RunAction_h

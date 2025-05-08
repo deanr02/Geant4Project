@@ -24,15 +24,15 @@
 // ********************************************************************
 //
 //
-/// \file B4/B4c/include/ActionInitialization.hh
-/// \brief Definition of the B4c::ActionInitialization class
+/// \file B4/B4d/include/ActionInitialization.hh
+/// \brief Definition of the B4d::ActionInitialization class
 
-#ifndef B4cActionInitialization_h
-#define B4cActionInitialization_h 1
+#ifndef B4dActionInitialization_h
+#define B4dActionInitialization_h 1
 
 #include "G4VUserActionInitialization.hh"
 
-namespace B4c
+namespace B4d
 {
 
 /// Action initialization class.
@@ -47,6 +47,6 @@ class ActionInitialization : public G4VUserActionInitialization
     void Build() const override;
 };
 
-}  // namespace B4c
+}  // namespace B4d
 
 #endif
