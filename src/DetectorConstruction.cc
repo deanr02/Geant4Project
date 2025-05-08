@@ -38,15 +38,20 @@
 #include "G4MultiFunctionalDetector.hh"
 #include "G4NistManager.hh"
 #include "G4PSEnergyDeposit.hh"
+#include "G4PSPopulation.hh"
 #include "G4PSTrackLength.hh"
 #include "G4PVPlacement.hh"
 #include "G4PVReplica.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SDChargedFilter.hh"
+#include "G4SDParticleFilter.hh"
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4VPrimitiveScorer.hh"
 #include "G4VisAttributes.hh"
+
+
+extern G4int nofLayers;
 
 namespace B4d
 {
@@ -57,12 +62,13 @@ G4ThreadLocal G4GlobalMagFieldMessenger* DetectorConstruction::fMagFieldMessenge
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+
 DetectorConstruction::DetectorConstruction(G4double f, G4double t)
 : G4VUserDetectorConstruction()
 {
   activeFraction = f; //active medium fraction
-  nofLayers = std::floor(calorSize/t);
-  layerThickness = calorSize/nofLayers;
+  G4int nLayers = nofLayers;
+  layerThickness = calorSize/nLayers;
   std::cout << "Doing construction" << std::endl;
 
 }
@@ -108,13 +114,14 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   G4double gapThickness = layerThickness * activeFraction * mm;
   G4double absoThickness = layerThickness * (1- activeFraction) * mm;
   G4double calorSizeXY = calorSize * mm;
+  G4int nLayers = nofLayers;
 
   std::cout << "calor Size" + std::to_string(calorSizeXY) << std::endl;
   std::cout << "layer thickness" + std::to_string(layerThickness) << std::endl;
   std::cout << "active medium fraction" + std::to_string(activeFraction) << std::endl;
   std::cout << "gap thickness" + std::to_string(gapThickness) << std::endl;
   std::cout << "absorber thickness" + std::to_string(absoThickness) << std::endl;
-  std::cout << "number of layers" + std::to_string(nofLayers) << std::endl;
+  std::cout << "number of layers" + std::to_string(nLayers) << std::endl;
 
 
 
@@ -186,7 +193,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                   layerLV,  // its logical volume
                   calorLV,  // its mother
                   kZAxis,  // axis of replication
-                  nofLayers,  // number of replica
+                  nLayers,  // number of replica
                   layerThickness);  // witdth of replica
 
   //
@@ -232,7 +239,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   // print parameters
   //
   G4cout << G4endl << "------------------------------------------------------------" << G4endl
-         << "---> The calorimeter is " << nofLayers << " layers of: [ " << absoThickness / mm
+         << "---> The calorimeter is " << nLayers << " layers of: [ " << absoThickness / mm
          << "mm of " << absorberMaterial->GetName() << " + " << gapThickness / mm << "mm of "
          << gapMaterial->GetName() << " ] " << G4endl
          << "------------------------------------------------------------" << G4endl;
@@ -261,40 +268,31 @@ void DetectorConstruction::ConstructSDandField()
   // declare Absorber as a MultiFunctionalDetector scorer
   //
   auto absDetector = new G4MultiFunctionalDetector("Absorber");
-  G4SDManager::GetSDMpointer()->AddNewDetector(absDetector);
 
   G4VPrimitiveScorer* primitive;
-  primitive = new G4PSEnergyDeposit("Edep");
+  primitive = new G4PSEnergyDeposit("Edep", 1);
   absDetector->RegisterPrimitive(primitive);
 
-  primitive = new G4PSPopulation("NChargeTracks");
-  G4VSDFilter charged = new G4SDChargedFilter("chargedFilter");
+  primitive = new G4PSPopulation("NChargeTracks", 1);
+  auto charged = new G4SDChargedFilter("chargedFilter");
   primitive->SetFilter(charged);
   absDetector->RegisterPrimitive(primitive);
 
-  primitive = new G4PSPopulation("NPhotonTracks");
-  G4VSDFilter gammaFilter = new G4SDParticleFilter("gamma");
-  primitive->SetFilter(gammaFilter);
-  absDetector->RegisterPrimitive(primitive);
-
+  G4SDManager::GetSDMpointer()->AddNewDetector(absDetector);
   SetSensitiveDetector("AbsoLV", absDetector);
 
   // declare Gap as a MultiFunctionalDetector scorer
   //
   auto gapDetector = new G4MultiFunctionalDetector("Gap");
-  G4SDManager::GetSDMpointer()->AddNewDetector(gapDetector);
 
-  primitive = new G4PSEnergyDeposit("Edep");
+  primitive = new G4PSEnergyDeposit("Edep", 1);
   gapDetector->RegisterPrimitive(primitive);
 
-  primitive = new G4PSPopulation("NChargeTracks");
+  primitive = new G4PSPopulation("NChargeTracks", 1);
   primitive->SetFilter(charged);
   gapDetector->RegisterPrimitive(primitive);
 
-  primitive = new G4PSPopulation("NPhotonTracks");
-  primitive->SetFilter(gammaFilter);
-  gapDetector->RegisterPrimitive(primitive);
-
+  G4SDManager::GetSDMpointer()->AddNewDetector(gapDetector);
   SetSensitiveDetector("GapLV", gapDetector);
 
   //

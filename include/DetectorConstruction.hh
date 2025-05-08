@@ -36,8 +36,7 @@
 class G4VPhysicalVolume;
 class G4GlobalMagFieldMessenger;
 
-namespace B4d
-{
+
 
 /// Detector construction class to define materials and geometry.
 /// The calorimeter is a box made of a given number of layers. A layer consists
@@ -45,7 +44,7 @@ namespace B4d
 ///
 /// Four parameters define the geometry of the calorimeter :
 ///
-/// - the thickness of an absorber plate,
+/// - the thickness of //an absorber plate,
 /// - the thickness of a gap,
 /// - the number of layers,
 /// - the transverse size of the calorimeter (the input face is a square).
@@ -54,6 +53,10 @@ namespace B4d
 /// type with primitive scorers are created and associated with the Absorber
 /// and Gap volumes.  In addition a transverse uniform magnetic field is defined
 /// via G4GlobalMagFieldMessenger class.
+
+
+namespace B4d
+{
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -79,8 +82,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4bool fCheckOverlaps = true;  // option to activate checking of volumes overlaps
     G4double activeFraction = 0.5; //active medium fraction
     G4double layerThickness = 10; //dual layer thickness
-    G4double calorSize = 50000; //length in mm
-    G4int nofLayers = 5000;
+    G4double calorSize = 10000; //length in mm
+
 
   };
 

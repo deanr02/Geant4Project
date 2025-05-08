@@ -29,18 +29,21 @@
 
 #include "RunAction.hh"
 
+
 #include "G4AnalysisManager.hh"
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 #include "globals.hh"
 
+extern G4int nofLayers;
+
 namespace B4
 {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RunAction::RunAction(G4int nofLayers)
+RunAction::RunAction()
 {
   // set printing event number per each event
   G4RunManager::GetRunManager()->SetPrintProgress(1);
@@ -49,7 +52,6 @@ RunAction::RunAction(G4int nofLayers)
   // The choice of the output format is done via the specified
   // file extension.
   auto analysisManager = G4AnalysisManager::Instance();
-
   // Create directories
   // analysisManager->SetHistoDirectoryName("histograms");
   // analysisManager->SetNtupleDirectoryName("ntuple");
@@ -59,14 +61,13 @@ RunAction::RunAction(G4int nofLayers)
 
   // Book histograms, ntuple
   //
-
+  G4int nLayers = nofLayers;
+  std::cout << nLayers << std::endl;
   // Creating histograms
-  analysisManager->CreateH2("Eabs", "Edep in absorber", nofLayers, 0, nofLayers, 110, 0., 330 * MeV);
-  analysisManager->CreateH2("Egap", "Edep in gap", nofLayers, 0, nofLayers, 100, 0., 30 * MeV);
-  analysisManager->CreateH2("NCabs", "NChargeTracks in absorber", nofLayers, 0, nofLayers, 10, 0., 50);
-  analysisManager->CreateH2("NCgap", "NChargeTracks in gap", nofLayers, 0, nofLayers, 10, 0., 50);
-  analysisManager->CreateH2("NPabs", "NPhotonTracks in absorber", nofLayers, 0, nofLayers, 10, 0., 50);
-  analysisManager->CreateH2("NPgap", "NPhotonTracks in gap", nofLayers, 0, nofLayers, 10, 0., 50);
+  analysisManager->CreateH2("Eabs", "Edep in absorber", nLayers, 0, nLayers, 110, 0., 330 * MeV);
+  analysisManager->CreateH2("Egap", "Edep in gap", nLayers, 0, nLayers, 100, 0., 30 * MeV);
+  analysisManager->CreateH2("NCabs", "NChargeTracks in absorber", nLayers, 0, nLayers, 10, 0., 50);
+  analysisManager->CreateH2("NCgap", "NChargeTracks in gap", nLayers, 0, nLayers, 10, 0., 50);
 
   // Creating ntuple
   //

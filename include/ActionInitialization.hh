@@ -32,6 +32,8 @@
 
 #include "G4VUserActionInitialization.hh"
 
+
+
 namespace B4d
 {
 
@@ -40,14 +42,12 @@ namespace B4d
 class ActionInitialization : public G4VUserActionInitialization
 {
   public:
-    ActionInitialization(G4int nofLayers);
+    ActionInitialization() = default;
     ~ActionInitialization() override = default;
 
     void BuildForMaster() const override;
     void Build() const override;
 
-  private:
-    G4int nofLayers = 5000;
 };
 
 }  // namespace B4d

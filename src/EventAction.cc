@@ -36,6 +36,7 @@
 #include "G4SDManager.hh"
 #include "G4THitsMap.hh"
 #include "G4UnitsTable.hh"
+#include "G4VScoreHistFiller.hh"
 
 #include <iomanip>
 
@@ -86,8 +87,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
     fGapEdepHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/Edep");
     fAbsoNChargeTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/NChargeTracks");
     fGapNChargeTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/NChargeTracks");
-    fAbsoNPhotonTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/NPhotonTracks");
-    fGapNPhotonTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/NPhotonTracks");
   }
 
   // Get sum values from hits collections
@@ -98,32 +97,26 @@ void EventAction::EndOfEventAction(const G4Event* event)
   auto absoNChargeTracks = GetHitsCollection(fAbsoNChargeTracksHCID, event);
   auto gapNChargeTracks = GetHitsCollection(fGapNChargeTracksHCID, event);
 
-  auto absoNPhotonTracks = GetHitsCollection(fAbsoNPhotonTracksHCID, event);
-  auto gapNPhotonTracks = GetHitsCollection(fGapNPhotonTracksHCID, event);
-
   // get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
 
   // fill histograms
   //
-  for (const auto& it : absoEdep->GetMap()) {
-    analysisManager->FillH2(0, it.first, it.second);
+ 
+  for (auto it : *absoEdep->GetMap()) {
+    analysisManager->FillH2(0, it.first, *(it.second));
   }
-  for (const auto& it : gapEdep->GetMap()) {
-    analysisManager->FillH2(1, it.first, it.second);
+
+  for (auto it : *gapEdep->GetMap()) {
+    analysisManager->FillH2(1, it.first, *(it.second));
   }
-  for (const auto& it : absoNChargeTracks->GetMap()) {
-    analysisManager->FillH2(2, it.first, it.second);
+  for (auto it : *absoNChargeTracks->GetMap()) {
+    analysisManager->FillH2(2, it.first, *(it.second));
   }
-  for (const auto& it : gapNChargeTracks->GetMap()) {
-    analysisManager->FillH2(3,it.first, it.second);
+  for (auto it : *gapNChargeTracks->GetMap()) {
+    analysisManager->FillH2(3,it.first, *(it.second));
   }
-  for (const auto& it : absoNPhotonTracks->GetMap()) {
-    analysisManager->FillH2(4, it.first, it.second);
-  }
-  for (const auto& it : gapNPhotonTracks->GetMap()) {
-    analysisManager->FillH2(5, it.first, it.second);
-  }
+
 
   // fill ntuple
   //

@@ -58,11 +58,12 @@ namespace B4
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(G4int nofLayers);
+    RunAction();
     ~RunAction() override = default;
 
     void BeginOfRunAction(const G4Run*) override;
     void EndOfRunAction(const G4Run*) override;
+
 };
 
 }  // namespace B4

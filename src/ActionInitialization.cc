@@ -40,15 +40,10 @@ namespace B4d
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-ActionInitialization::ActionInitialization(G4int n)
-: G4VUserActionInitialization()
-{
-  nofLayers = n;
-}
 
 void ActionInitialization::BuildForMaster() const
 {
-  SetUserAction(new RunAction(nofLayers));
+  SetUserAction(new RunAction);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -56,7 +51,7 @@ void ActionInitialization::BuildForMaster() const
 void ActionInitialization::Build() const
 {
   SetUserAction(new PrimaryGeneratorAction);
-  SetUserAction(new RunAction(nofLayers));
+  SetUserAction(new RunAction);
   SetUserAction(new EventAction);
 }
 
