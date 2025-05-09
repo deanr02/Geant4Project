@@ -1,0 +1,141 @@
+\documentclass[%
+ reprint,
+%superscriptaddress,
+%groupedaddress,
+%unsortedaddress,
+%runinaddress,
+%frontmatterverbose, 
+%preprint,
+%preprintnumbers,
+%nofootinbib,
+%nobibnotes,
+%bibnotes,
+ amsmath,amssymb,
+ aps,
+%pra,
+%prb,
+%rmp,
+%prstab,
+%prstper,
+%float,
+]{revtex4-2}
+\usepackage{url}
+\usepackage{float}
+\usepackage{graphicx}% Include figure files
+\graphicspath{{../images/}}
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+%\usepackage{hyperref}% add hypertext capabilities
+%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
+%\linenumbers\relax % Commence numbering lines
+
+%\usepackage[showframe,%Uncomment any one of the following lines to test 
+%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
+%%text={7in,10in},centering,
+%%margin=1.5in,
+%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
+%%height=10in,a5paper,hmargin={3cm,0.8in},
+%]{geometry}
+
+\begin{document}
+
+\preprint{APS/123-QED}
+
+\title{Simulation of a Liquid Argon Electromagnetic Calorimeter in Geant4}% Force line breaks with \\
+
+\author{Dean Reiter}
+\affiliation{%
+ Cornell University\\
+}%
+
+\date{\today}% It is always \today, today,
+             %  but any date may be explicitly specified
+
+\begin{abstract}
+
+
+\end{abstract}
+
+
+\maketitle
+
+
+
+\section{Introduction}
+
+What is Geant4
+-summary
+-how it works, what it models
+-when, how, who its used
+
+Scope and goals
+-goal to learn geant4, motivation
+-electromagnetic calorimeter 
+    - what is a calorimeter, why
+    - electromagnetic vs hadronic
+    - sampling vs homogenous
+    - issues and engineering: efficiency, resolution, sampling fraction
+-scope: modeling basic calorimeter
+    - example models
+
+\section{Simulation Setup}
+
+- Detector model
+    - based on example b4d -- modified DetectorConstruction, RunAction, EventAction
+    - geometry: layers, absorber, gap
+        - change: geom calculated from layer thickness and material ratio
+        - large size, so energy can only leak by reflecting out incident surface
+    - scoring volumes, energy deposit
+        - change: created scorers for each layer, removed track scorers
+- event 
+    - what is an event
+    - particlegun - electron, variable energy
+    - steps, tracks, scoring
+    - physics list
+    - end of event
+        -change: 2d histograms, profiles, energy deposition, removed track info
+- run 
+    - what is a run
+    - run initialization
+    - analysis manager, end of run
+        - file save
+- execution and computation
+    - macro file to run 1000 events for various beam E
+    - powershell script to automate runs for various geometries
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\columnwidth]{shower.png}% Here is how to import EPS art
+\caption{\label{fig:epsart} Visualization of a simulated particle shower produced by a 1 GeV electron in a sampling calorimeter. Cross-sectional view is shown, with the electron incident from the right. The liquid argon and lead layers (white wire-frame) are 8 cm and 2 cm thick, respectively. Tracks are shown for particles with negative charge (red), positive charge (blue), and neutral charge (green). }
+\end{figure}
+
+
+\section{Data and Analysis}
+
+
+
+
+
+
+
+
+
+\section{Conclusion}
+
+
+
+\begin{acknowledgments}
+
+[Acknowledgements]
+
+\end{acknowledgments}
+
+
+\appendix
+
+
+\bibliography{main}% Produces the bibliography via BibTeX.
+
+\end{document}
+%
+% ****** End of file apssamp.tex ******
