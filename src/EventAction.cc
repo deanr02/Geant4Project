@@ -39,6 +39,7 @@
 #include "G4VScoreHistFiller.hh"
 
 #include <iomanip>
+extern G4double layerThickness;
 
 namespace B4d
 {
@@ -81,12 +82,11 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/) {}
 
 void EventAction::EndOfEventAction(const G4Event* event)
 {
+
   // Get hist collections IDs
   if (fAbsoEdepHCID == -1) {
     fAbsoEdepHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/Edep");
     fGapEdepHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/Edep");
-    fAbsoNChargeTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Absorber/NChargeTracks");
-    fGapNChargeTracksHCID = G4SDManager::GetSDMpointer()->GetCollectionID("Gap/NChargeTracks");
   }
 
   // Get sum values from hits collections
@@ -94,28 +94,52 @@ void EventAction::EndOfEventAction(const G4Event* event)
   auto absoEdep = GetHitsCollection(fAbsoEdepHCID, event);
   auto gapEdep = GetHitsCollection(fGapEdepHCID, event);
 
-  auto absoNChargeTracks = GetHitsCollection(fAbsoNChargeTracksHCID, event);
-  auto gapNChargeTracks = GetHitsCollection(fGapNChargeTracksHCID, event);
-
   // get analysis manager
   auto analysisManager = G4AnalysisManager::Instance();
 
   // fill histograms
   //
+  G4double absoEdep_total = 0;
+  G4double gapEdep_total = 0;
+  G4double z;
+  G4double e;
+  G4double n;
+  std::vector<G4double> absoHit_z;
+  std::vector<G4double> absoHit_Edep;
+  std::vector<G4double> gapHit_z;
+  std::vector<G4double> gapHit_Edep;
+
  
   for (auto it : *absoEdep->GetMap()) {
-    analysisManager->FillH2(0, it.first, *(it.second));
+    z = (1/2 + it.first)*layerThickness;
+    e = *(it.second);
+    analysisManager->FillH1(0, e);
+    analysisManager->FillH2(0, z, e);
+    analysisManager->FillP1(0, z, e);
+    analysisManager->FillNtupleDColumn(0,e);
+    // std::cout << "filled ntuple" << std::endl;
+    absoHit_z.push_back(z);
+    absoHit_Edep.push_back(e);
+
   }
+  // analysisManager->FillNtupleDColumn(1, absoHit_z);
+  // analysisManager->FillNtupleDColumn(2, absoHit_Edep);
+
+
 
   for (auto it : *gapEdep->GetMap()) {
-    analysisManager->FillH2(1, it.first, *(it.second));
+    z = (1/2 + it.first)*layerThickness;
+    e = *(it.second);
+    analysisManager->FillH1(1, e);
+    analysisManager->FillH2(1, z, e);
+    analysisManager->FillP1(1, z, e);
+    analysisManager->FillNtupleDColumn(1,e);
+    gapHit_z.push_back(z);
+    gapHit_Edep.push_back(e);
   }
-  for (auto it : *absoNChargeTracks->GetMap()) {
-    analysisManager->FillH2(2, it.first, *(it.second));
-  }
-  for (auto it : *gapNChargeTracks->GetMap()) {
-    analysisManager->FillH2(3,it.first, *(it.second));
-  }
+  // analysisManager->FillNtupleDColumn(4, gapHit_z);
+  // analysisManager->FillNtupleDColumn(5, gapHit_Edep);
+
 
 
   // fill ntuple
@@ -131,10 +155,12 @@ void EventAction::EndOfEventAction(const G4Event* event)
   // print per event (modulo n)
   //
   auto eventID = event->GetEventID();
+
   auto printModulo = G4RunManager::GetRunManager()->GetPrintProgress();
   if ((printModulo > 0) && (eventID % printModulo == 0)) {
     G4cout << "--> End of event: " << eventID << "\n" << G4endl;
   }
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

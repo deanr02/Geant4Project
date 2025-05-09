@@ -60,6 +60,10 @@ void PrintUsage()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4int nofLayers=100;
+G4double activeFraction = 0.5; //active medium fraction
+G4double layerThickness = 10; //dual layer thickness
+G4double calorSize = 10000; //length in mm
+G4double beamEnergy = 300; //electron energy in MeV
 
 int main(int argc, char** argv)
 {
@@ -79,6 +83,9 @@ int main(int argc, char** argv)
   G4double f = std::stod(argv[argc-2]);
   G4double t = std::stod(argv[argc-1]);
   nofLayers = std::floor(50000/t);
+
+  activeFraction = f; //active medium fraction
+  layerThickness = calorSize/nofLayers;
 
   G4String macro;
   G4String session;
@@ -137,7 +144,7 @@ int main(int argc, char** argv)
   std::cout << argv[argc-1] << std::endl;
   std::cout << argv[argc-2] << std::endl;
 
-  auto detConstruction = new B4d::DetectorConstruction(f, t);
+  auto detConstruction = new B4d::DetectorConstruction();
   runManager->SetUserInitialization(detConstruction);
 
   auto physicsList = new FTFP_BERT;

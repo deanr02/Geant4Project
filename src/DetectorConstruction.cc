@@ -38,6 +38,7 @@
 #include "G4MultiFunctionalDetector.hh"
 #include "G4NistManager.hh"
 #include "G4PSEnergyDeposit.hh"
+#include "G4PSPassageCellCurrent.hh"
 #include "G4PSPopulation.hh"
 #include "G4PSTrackLength.hh"
 #include "G4PVPlacement.hh"
@@ -52,6 +53,9 @@
 
 
 extern G4int nofLayers;
+extern G4double layerThickness;
+extern G4double activeFraction;
+extern G4double calorSize;
 
 namespace B4d
 {
@@ -62,16 +66,6 @@ G4ThreadLocal G4GlobalMagFieldMessenger* DetectorConstruction::fMagFieldMessenge
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-
-DetectorConstruction::DetectorConstruction(G4double f, G4double t)
-: G4VUserDetectorConstruction()
-{
-  activeFraction = f; //active medium fraction
-  G4int nLayers = nofLayers;
-  layerThickness = calorSize/nLayers;
-  std::cout << "Doing construction" << std::endl;
-
-}
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
@@ -273,11 +267,6 @@ void DetectorConstruction::ConstructSDandField()
   primitive = new G4PSEnergyDeposit("Edep", 1);
   absDetector->RegisterPrimitive(primitive);
 
-  primitive = new G4PSPopulation("NChargeTracks", 1);
-  auto charged = new G4SDChargedFilter("chargedFilter");
-  primitive->SetFilter(charged);
-  absDetector->RegisterPrimitive(primitive);
-
   G4SDManager::GetSDMpointer()->AddNewDetector(absDetector);
   SetSensitiveDetector("AbsoLV", absDetector);
 
@@ -286,10 +275,6 @@ void DetectorConstruction::ConstructSDandField()
   auto gapDetector = new G4MultiFunctionalDetector("Gap");
 
   primitive = new G4PSEnergyDeposit("Edep", 1);
-  gapDetector->RegisterPrimitive(primitive);
-
-  primitive = new G4PSPopulation("NChargeTracks", 1);
-  primitive->SetFilter(charged);
   gapDetector->RegisterPrimitive(primitive);
 
   G4SDManager::GetSDMpointer()->AddNewDetector(gapDetector);

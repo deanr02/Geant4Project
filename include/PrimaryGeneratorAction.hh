@@ -31,9 +31,11 @@
 #define B4PrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "G4ParticleGun.hh"
 
 class G4ParticleGun;
 class G4Event;
+
 
 namespace B4
 {

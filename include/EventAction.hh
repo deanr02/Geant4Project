@@ -31,6 +31,7 @@
 #define EventAction_h 1
 
 #include "G4UserEventAction.hh"
+#include "G4VUserEventInformation.hh"
 #include "globals.hh"
 
 class G4Event;
@@ -58,17 +59,13 @@ class EventAction : public G4UserEventAction
     // methods
     G4THitsMap<G4double>* GetHitsCollection(G4int hcID, const G4Event* event) const;
     G4double GetSum(G4THitsMap<G4double>* hitsMap) const;
-    void PrintEventStatistics(G4double absoEdep, G4double absoTrackLength, G4double gapEdep,
-                              G4double gapTrackLength) const;
+    void PrintEventStatistics(G4double absoEdep, G4double gapEdep) const;
 
     // data members
     G4int fAbsoEdepHCID = -1;
     G4int fGapEdepHCID = -1;
-    G4int fAbsoNChargeTracksHCID = -1;
-    G4int fGapNChargeTracksHCID = -1;
-    G4int fAbsoNPhotonTracksHCID = -1;
-    G4int fGapNPhotonTracksHCID = -1;
 };
+
 
 }  // namespace B4d
 
