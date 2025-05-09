@@ -1,0 +1,12 @@
+/analysis/openFile 250MeV.root 
+/gun/particle e-
+/gun/energy 500 MeV
+/run/beamOn 1000                 
+/analysis/write
+/analysis/closeFile
+
+/analysis/openFile 500MeV.root 
+/gun/energy 500 MeV
+/run/beamOn 1000                 
+/analysis/write
+/analysis/closeFile
