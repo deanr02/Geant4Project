@@ -117,9 +117,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillH2(0, z, e);
     analysisManager->FillP1(0, z, e);
     analysisManager->FillNtupleDColumn(0,e);
-    // std::cout << "filled ntuple" << std::endl;
-    absoHit_z.push_back(z);
-    absoHit_Edep.push_back(e);
+    //absoHit_z.push_back(z);
+    //absoHit_Edep.push_back(e);
 
   }
   // analysisManager->FillNtupleDColumn(1, absoHit_z);
@@ -134,8 +133,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillH2(1, z, e);
     analysisManager->FillP1(1, z, e);
     analysisManager->FillNtupleDColumn(1,e);
-    gapHit_z.push_back(z);
-    gapHit_Edep.push_back(e);
+    //gapHit_z.push_back(z);
+    //gapHit_Edep.push_back(e);
   }
   // analysisManager->FillNtupleDColumn(4, gapHit_z);
   // analysisManager->FillNtupleDColumn(5, gapHit_Edep);
