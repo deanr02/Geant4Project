@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.27)  9 MAY 2025 19:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.27)  10 MAY 2025 05:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -177,7 +177,20 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box69
 \@float@everytoks=\toks26
 \@floatcapt=\box70
-) (c:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+) (c:/texlive/2025/texmf-dist/tex/latex/lipsum/lipsum.sty (c:/texlive/2025/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty (c:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2025-01-18 L3 programming layer (loader) 
+ (c:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count291
+\l__pdf_internal_box=\box71
+))
+Package: l3keys2e 2024-08-16 LaTeX2e option processing using LaTeX3 keys
+)
+Package: lipsum 2021-09-20 v2.7 150 paragraphs of Lorem Ipsum dummy text
+\g__lipsum_par_int=\count292
+\l__lipsum_a_int=\count293
+\l__lipsum_b_int=\count294
+ (c:/texlive/2025/texmf-dist/tex/latex/lipsum/lipsum.ltd.tex)) (c:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
  (c:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
@@ -200,12 +213,12 @@ Package: dcolumn 2023/07/08 v1.06 decimal alignment package (DPC)
  (c:/texlive/2025/texmf-dist/tex/latex/tools/array.sty
 Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
 \col@sep=\dimen152
-\ar@mcellbox=\box71
+\ar@mcellbox=\box72
 \extrarowheight=\dimen153
 \NC@list=\toks28
 \extratabsurround=\skip57
 \backup@length=\skip58
-\ar@cellbox=\box72
+\ar@cellbox=\box73
 )) (c:/texlive/2025/texmf-dist/tex/latex/tools/bm.sty
 Package: bm 2023/12/19 v1.2f Bold Symbol Support (DPC/FMi)
 \symboldoperators=\mathgroup6
@@ -217,47 +230,74 @@ Package bm Info: No bold for \U/msb/m/n, using \pmb.
 LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 LaTeX Info: Redefining \bm on input line 219.
 )
-Class revtex4-2 Info: Unrecognized array package. Please update this document class! (Proceeding with fingers crossed.) on input line 40.
+Class revtex4-2 Info: Unrecognized array package. Please update this document class! (Proceeding with fingers crossed.) on input line 41.
 
 
 Class revtex4-2 Warning: Repair the float package.
 
-Class revtex4-2 Info: cite was not loaded (OK!) on input line 40.
-Class revtex4-2 Info: mcite was not loaded (OK!) on input line 40.
-Class revtex4-2 Info: multicol was not loaded (OK!) on input line 40.
-(c:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count291
-\l__pdf_internal_box=\box73
-) (./main.aux)
+Class revtex4-2 Info: cite was not loaded (OK!) on input line 41.
+Class revtex4-2 Info: mcite was not loaded (OK!) on input line 41.
+Class revtex4-2 Info: multicol was not loaded (OK!) on input line 41.
+(./main.aux
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+
+LaTeX Warning: Label `fig:epsart' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
+LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 41.
+LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 41.
+LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 41.
+LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 41.
+LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 41.
+LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 41.
+LaTeX Font Info:    ... okay on input line 41.
  (c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count292
+\scratchcounter=\count295
 \scratchdimen=\dimen154
 \scratchbox=\box74
-\nofMPsegments=\count293
-\nofMParguments=\count294
+\nofMPsegments=\count296
+\nofMParguments=\count297
 \everyMPshowfont=\toks29
-\MPscratchCnt=\count295
+\MPscratchCnt=\count298
 \MPscratchDim=\dimen155
-\MPnumerator=\count296
-\makeMPintoPDFobject=\count297
+\MPnumerator=\count299
+\makeMPintoPDFobject=\count300
 \everyMPtoPDFconversion=\toks30
 ) (c:/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -270,16 +310,69 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 <../images/shower.png, id=1, 639.89063pt x 479.7925pt>
 File: ../images/shower.png Graphic file (type png)
 <use ../images/shower.png>
-Package pdftex.def Info: ../images/shower.png  used on input line 108.
+Package pdftex.def Info: ../images/shower.png  used on input line 142.
 (pdftex.def)             Requested size: 184.5pt x 138.33826pt.
+<../images/efficiency2.png, id=3, 1083.04625pt x 657.95813pt>
+File: ../images/efficiency2.png Graphic file (type png)
+<use ../images/efficiency2.png>
+Package pdftex.def Info: ../images/efficiency2.png  used on input line 171.
+(pdftex.def)             Requested size: 382.5pt x 232.36699pt.
+ [1{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <../images/shower.png>]
+<../images/profile_0.95_10_10.png, id=15, 736.7525pt x 437.13312pt>
+File: ../images/profile_0.95_10_10.png Graphic file (type png)
+<use ../images/profile_0.95_10_10.png>
+Package pdftex.def Info: ../images/profile_0.95_10_10.png  used on input line 183.
+(pdftex.def)             Requested size: 221.3985pt x 131.36105pt.
+<../images/profile_0.95_10_100.png, id=16, 733.74126pt x 439.6425pt>
+File: ../images/profile_0.95_10_100.png Graphic file (type png)
+<use ../images/profile_0.95_10_100.png>
+Package pdftex.def Info: ../images/profile_0.95_10_100.png  used on input line 189.
+(pdftex.def)             Requested size: 221.3985pt x 132.65181pt.
+<../images/profile_0.95_10_1000.png, id=17, 753.31438pt x 439.6425pt>
+File: ../images/profile_0.95_10_1000.png Graphic file (type png)
+<use ../images/profile_0.95_10_1000.png>
+Package pdftex.def Info: ../images/profile_0.95_10_1000.png  used on input line 195.
+(pdftex.def)             Requested size: 221.3985pt x 129.2104pt.
+<../images/profile_0.95_10_10000.png, id=18, 748.7975pt x 375.4025pt>
+File: ../images/profile_0.95_10_10000.png Graphic file (type png)
+<use ../images/profile_0.95_10_10000.png>
+Package pdftex.def Info: ../images/profile_0.95_10_10000.png  used on input line 201.
+(pdftex.def)             Requested size: 221.3985pt x 110.99481pt.
+<../images/profile_0.05_50_1000.png, id=19, 727.71875pt x 433.62pt>
+File: ../images/profile_0.05_50_1000.png Graphic file (type png)
+<use ../images/profile_0.05_50_1000.png>
+Package pdftex.def Info: ../images/profile_0.05_50_1000.png  used on input line 212.
+(pdftex.def)             Requested size: 221.3985pt x 131.91977pt.
+ [2 <../images/efficiency2.png> <../images/profile_0.95_10_10.png> <../images/profile_0.95_10_100.png> <../images/profile_0.95_10_1000.png> <../images/profile_0.95_10_10000.png>]
+<../images/profile_0.25_50_1000.png, id=28, 746.79pt x 438.63875pt>
+File: ../images/profile_0.25_50_1000.png Graphic file (type png)
+<use ../images/profile_0.25_50_1000.png>
+Package pdftex.def Info: ../images/profile_0.25_50_1000.png  used on input line 218.
+(pdftex.def)             Requested size: 221.3985pt x 130.03984pt.
+<../images/profile_0.5_50_1000.png, id=29, 740.7675pt x 435.6275pt>
+File: ../images/profile_0.5_50_1000.png Graphic file (type png)
+<use ../images/profile_0.5_50_1000.png>
+Package pdftex.def Info: ../images/profile_0.5_50_1000.png  used on input line 224.
+(pdftex.def)             Requested size: 221.3985pt x 130.19736pt.
+<../images/profile_0.75_50_1000.png, id=30, 736.25063pt x 435.12563pt>
+File: ../images/profile_0.75_50_1000.png Graphic file (type png)
+<use ../images/profile_0.75_50_1000.png>
+Package pdftex.def Info: ../images/profile_0.75_50_1000.png  used on input line 230.
+(pdftex.def)             Requested size: 221.3985pt x 130.8441pt.
+<../images/profile_0.95_50_1000.png, id=31, 739.26187pt x 440.14438pt>
+File: ../images/profile_0.95_50_1000.png Graphic file (type png)
+<use ../images/profile_0.95_50_1000.png>
+Package pdftex.def Info: ../images/profile_0.95_50_1000.png  used on input line 236.
+(pdftex.def)             Requested size: 221.3985pt x 131.81598pt.
  (./main.bbl
 
-LaTeX Warning: Reference `LastBibItem' on page 1 undefined on input line 10.
+LaTeX Warning: Reference `LastBibItem' on page 3 undefined on input line 10.
 
+[3 <../images/profile_0.05_50_1000.png> <../images/profile_0.25_50_1000.png> <../images/profile_0.5_50_1000.png> <../images/profile_0.75_50_1000.png> <../images/profile_0.95_50_1000.png>]
 
 Package natbib Warning: Empty `thebibliography' environment on input line 53.
 
-) [1{c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <../images/shower.png>] (./main.aux)
+) [4] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -288,20 +381,23 @@ L3 programming layer <2025-01-18>
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
  ) 
 Here is how much of TeX's memory you used:
- 4794 strings out of 475128
- 66922 string characters out of 5765515
- 470202 words of memory out of 5000000
- 27782 multiletter control sequences out of 15000+600000
+ 5309 strings out of 475128
+ 80543 string characters out of 5765515
+ 573617 words of memory out of 5000000
+ 28283 multiletter control sequences out of 15000+600000
  560394 words of font info for 41 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 71i,6n,79p,579b,282s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,6n,93p,579b,287s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on main.pdf (1 page, 243494 bytes).
+Output written on main.pdf (4 pages, 1115482 bytes).
 PDF statistics:
- 36 PDF objects out of 1000 (max. 8388607)
- 20 compressed objects within 1 object stream
+ 65 PDF objects out of 1000 (max. 8388607)
+ 26 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
