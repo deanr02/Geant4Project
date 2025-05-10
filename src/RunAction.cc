@@ -99,16 +99,11 @@ RunAction::RunAction()
 void RunAction::BeginOfRunAction(const G4Run* /*run*/)
 {
   // inform the runManager to save random number seed
-  // G4RunManager::GetRunManager()->SetRandomNumberStore(true);
+  //G4RunManager::GetRunManager()->SetRandomNumberStore(true);
 
   // Get analysis manager
 
-  auto analysisManager = G4AnalysisManager::Instance();
-
-  const auto* base =
-  G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction();
-
-
+ 
   // // Open an output file
   // //
   // G4String fileName = "f_" + std::to_string(activeFraction) + "_t_" + std::to_string(layerThickness) + ".root";
@@ -117,7 +112,7 @@ void RunAction::BeginOfRunAction(const G4Run* /*run*/)
   // // G4String fileName = "B4.hdf5";
   // // G4String fileName = "B4.xml";
   // analysisManager->OpenFile(fileName);
-  G4cout << "Using " << analysisManager->GetType() << G4endl;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

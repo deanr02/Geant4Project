@@ -40,6 +40,11 @@
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <stdio.h>
+#include <crtdbg.h>
+
 
 // #include "Randomize.hh"
 
@@ -167,11 +172,11 @@ int main(int argc, char** argv)
   // /score/ntuple/writerVerbose level
   // The default file type ("root") can be changed in xml, csv, hdf5
   // scoreNtupleWriter.SetDefaultFileType("xml");
-  G4TScoreNtupleWriter<G4AnalysisManager> scoreNtupleWriter;
-  scoreNtupleWriter.SetVerboseLevel(1);
-  scoreNtupleWriter.SetNtupleMerging(true);
-  // Note: merging ntuples is available only with Root output
-  // (the default in G4TScoreNtupleWriter)
+  // G4TScoreNtupleWriter<G4AnalysisManager> scoreNtupleWriter;
+  // scoreNtupleWriter.SetVerboseLevel(1);
+  // scoreNtupleWriter.SetNtupleMerging(true);
+  // // Note: merging ntuples is available only with Root output
+  // // (the default in G4TScoreNtupleWriter)
 
   // Process macro or start UI session
   //
@@ -195,8 +200,15 @@ int main(int argc, char** argv)
   // owned and deleted by the run manager, so they should not be deleted
   // in the main() program !
 
+  delete ui;
   delete visManager;
+    std::cout<< "deleted vis manager" <<std::endl;
+
+  std::terminate();
+  std::exit(0);
   delete runManager;
+  std::cout<< "deleted run manager" <<std::endl;
+  return 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

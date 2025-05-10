@@ -101,45 +101,33 @@ void EventAction::EndOfEventAction(const G4Event* event)
   //
   G4double absoEdep_total = 0;
   G4double gapEdep_total = 0;
-  G4double z;
-  G4double e;
-  G4double n;
-  std::vector<G4double> absoHit_z;
-  std::vector<G4double> absoHit_Edep;
-  std::vector<G4double> gapHit_z;
-  std::vector<G4double> gapHit_Edep;
-
  
   for (auto it : *absoEdep->GetMap()) {
-    z = (1/2 + it.first)*layerThickness;
-    e = *(it.second);
-    analysisManager->FillH1(0, e);
-    analysisManager->FillH2(0, z, e);
-    analysisManager->FillP1(0, z, e);
-    analysisManager->FillNtupleDColumn(0,e);
+    analysisManager->FillH1(0, *(it.second));
+    analysisManager->FillH2(0, (1/2 + it.first)*layerThickness, *(it.second));
+    analysisManager->FillP1(0, (1/2 + it.first)*layerThickness, *(it.second));
+    absoEdep_total += *(it.second);
     //absoHit_z.push_back(z);
     //absoHit_Edep.push_back(e);
 
   }
+  analysisManager->FillNtupleDColumn(0,absoEdep_total);
   // analysisManager->FillNtupleDColumn(1, absoHit_z);
   // analysisManager->FillNtupleDColumn(2, absoHit_Edep);
 
 
 
   for (auto it : *gapEdep->GetMap()) {
-    z = (1/2 + it.first)*layerThickness;
-    e = *(it.second);
-    analysisManager->FillH1(1, e);
-    analysisManager->FillH2(1, z, e);
-    analysisManager->FillP1(1, z, e);
-    analysisManager->FillNtupleDColumn(1,e);
+    analysisManager->FillH1(1, *(it.second));
+    analysisManager->FillH2(1, (1/2 + it.first)*layerThickness, *(it.second));
+    analysisManager->FillP1(1, (1/2 + it.first)*layerThickness, *(it.second));
+    gapEdep_total += *(it.second);
     //gapHit_z.push_back(z);
     //gapHit_Edep.push_back(e);
   }
+  analysisManager->FillNtupleDColumn(0,gapEdep_total);
   // analysisManager->FillNtupleDColumn(4, gapHit_z);
   // analysisManager->FillNtupleDColumn(5, gapHit_Edep);
-
-
 
   // fill ntuple
   //

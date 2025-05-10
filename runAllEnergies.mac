@@ -1,31 +1,45 @@
-/analysis/openFile 10MeV.root 
+/analysis/reset
+/analysis/openFile 1MeV.root 
 /run/initialize
 /gun/particle e-
 /gun/energy 1 MeV
 /run/beamOn 1000                 
 /analysis/write
 /analysis/closeFile
+/analysis/reset
 
-/analysis/openFile 50MeV.root 
+/analysis/openFile 10MeV.root
+/run/initialize
+/gun/particle e-
 /gun/energy 10 MeV
 /run/beamOn 1000                 
 /analysis/write
 /analysis/closeFile
+/analysis/reset
 
-/analysis/openFile 100MeV.root 
+/analysis/openFile 100MeV.root
+/run/initialize
+/gun/particle e-
 /gun/energy 100 MeV
 /run/beamOn 1000                 
 /analysis/write
 /analysis/closeFile
+/analysis/reset
 
-/analysis/openFile 250MeV.root 
+/analysis/openFile 1000MeV.root 
+/run/initialize
+/gun/particle e-
 /gun/energy 1000 MeV
 /run/beamOn 1000                 
 /analysis/write
 /analysis/closeFile
+/analysis/reset
 
-/analysis/openFile 500MeV.root 
+/analysis/openFile 10000MeV.root 
+/run/initialize
+/gun/particle e-
 /gun/energy 10000 MeV
 /run/beamOn 1000                 
 /analysis/write
 /analysis/closeFile
+/analysis/reset
