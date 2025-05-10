@@ -96,3 +96,9 @@ void plot_all_graphs() {
     c->Update();
     c->SaveAs("analysis/all_graphs.png");
 }
+
+{
+  gROOT->Reset();
+  gROOT->SetStyle("Plain");
+  plot_all_graphs();
+}
