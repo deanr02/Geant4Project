@@ -35,6 +35,7 @@
 #include "G4RunManager.hh"
 #include "G4SDManager.hh"
 #include "G4THitsMap.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 #include "G4VScoreHistFiller.hh"
 
@@ -103,10 +104,10 @@ void EventAction::EndOfEventAction(const G4Event* event)
   G4double gapEdep_total = 0;
  
   for (auto it : *absoEdep->GetMap()) {
-    analysisManager->FillH1(0, *(it.second));
-    analysisManager->FillH2(0, (1/2 + it.first)*layerThickness, *(it.second));
-    analysisManager->FillP1(0, (1/2 + it.first)*layerThickness, *(it.second));
-    absoEdep_total += *(it.second);
+    analysisManager->FillH1(0, *(it.second)*MeV);
+    analysisManager->FillH2(0, (1/2 + it.first)*layerThickness, *(it.second)*MeV);
+    analysisManager->FillP1(0, (1/2 + it.first)*layerThickness, *(it.second)*MeV);
+    absoEdep_total += *(it.second)*MeV;
     //absoHit_z.push_back(z);
     //absoHit_Edep.push_back(e);
 
@@ -118,10 +119,10 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
 
   for (auto it : *gapEdep->GetMap()) {
-    analysisManager->FillH1(1, *(it.second));
-    analysisManager->FillH2(1, (1/2 + it.first)*layerThickness, *(it.second));
-    analysisManager->FillP1(1, (1/2 + it.first)*layerThickness, *(it.second));
-    gapEdep_total += *(it.second);
+    analysisManager->FillH1(1, *(it.second)*MeV);
+    analysisManager->FillH2(1, (1/2 + it.first)*layerThickness, *(it.second)*MeV);
+    analysisManager->FillP1(1, (1/2 + it.first)*layerThickness, *(it.second)*MeV);
+    gapEdep_total += *(it.second)*MeV;
     //gapHit_z.push_back(z);
     //gapHit_Edep.push_back(e);
   }
