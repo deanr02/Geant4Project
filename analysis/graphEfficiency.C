@@ -96,10 +96,10 @@
       gr->SetMinimum(0.0001);
 
       if (first_graph) {
-        gr->Draw("APL");
+        gr->Draw("HIST");
         first_graph = false;
       } else {
-        gr->Draw("PL SAME");
+        gr->Draw("HIST SAME");
       }
 
       legend->AddEntry(gr, Form("r=" + r +" , t=" + t), "l");
